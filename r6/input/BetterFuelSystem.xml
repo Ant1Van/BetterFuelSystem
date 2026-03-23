@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<bindings>
+    <context name="BetterFuelSystem">
+        <action name="open_better_fuel_system" map="open_better_fuel_system" />
+    </context>
+
+    <context name="Exploration" append="true">
+        <include name="BetterFuelSystem" />
+    </context>
+    <context name="VehicleDrive" append="true">
+        <include name="BetterFuelSystem" />
+    </context>
+    <context name="UINotifications" append="true">
+        <include name="BetterFuelSystem" />
+    </context>
+    
+    <acceptedEvents action="open_better_fuel_system">
+        <event name="BUTTON_HOLD_COMPLETE" />
+        <event name="BUTTON_RELEASED" />
+    </acceptedEvents>
+
+    <hold action="open_better_fuel_system" timeout="0.6" />
+
+    <mapping name="open_better_fuel_system" type="Button"> 
+        <button id="IK_Z" />
+        <button id="IK_Pad_LeftThumb" />
+    </mapping>
+
+</bindings> 
