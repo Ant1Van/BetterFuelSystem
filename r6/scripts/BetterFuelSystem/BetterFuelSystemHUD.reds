@@ -259,7 +259,14 @@ public class FuelIndicatorManager extends IScriptable {
       inVehicle = IsDefined(vehicle);
     }
 
-    if !inVehicle {
+    // Показываем HUD только если игрок сам за рулём (не пассажир/такси)
+    let isDriver: Bool = false;
+    let svc = GetBetterFuelSystemServiceInstance();
+    if IsDefined(svc) {
+      isDriver = svc.IsPlayerDriving();
+    }
+
+    if !inVehicle || !isDriver {
       this.Hide();
       return;
     }

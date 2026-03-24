@@ -45,6 +45,7 @@ public class BetterFuelSystemService extends ScriptableService {
         }
         this.currentVehicleID = "";
         this.pendingRefuelAmount = 0.0;
+        this.isPlayerDriving = false;
     }
 
     private cb func OnReload() {
@@ -97,6 +98,17 @@ public class BetterFuelSystemService extends ScriptableService {
     }
 
     private let pendingRefuelAmount: Float;
+
+    // Флаг: игрок сам за рулём (устанавливается из Lua через hudCarController)
+    private let isPlayerDriving: Bool;
+
+    public func SetIsPlayerDriving(value: Bool) -> Void {
+        this.isPlayerDriving = value;
+    }
+
+    public func IsPlayerDriving() -> Bool {
+        return this.isPlayerDriving;
+    }
     
     public func SetPendingRefuelAmount(amount: Float) -> Void {
         this.pendingRefuelAmount = amount;

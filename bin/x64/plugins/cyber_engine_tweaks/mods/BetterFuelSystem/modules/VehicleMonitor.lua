@@ -112,12 +112,8 @@ end
 
 function VehicleMonitor:update(deltaTime)
     if not self.currentVehicle then return end
-    
-    local player = Game.GetPlayer()
-    local isPlayerDriving = Utils.IsPlayerDriving(self.currentVehicle, player)
-    if not isPlayerDriving then
-        return
-    end
+    -- Проверка isPlayerDriving вынесена в init.lua через hudCarController Observe.
+    -- Сюда попадаем только если игрок действительно за рулём.
 
     local isPaused = self:isGamePaused()
     if isPaused ~= self.wasPaused then

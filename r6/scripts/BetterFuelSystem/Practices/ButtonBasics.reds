@@ -48,7 +48,7 @@ public class ButtonBasics extends Practice {
 		buttonLeft.Reparent(bottom);
 		let leftRoot = buttonLeft.GetRootWidget();
 		if IsDefined(leftRoot) {
-			leftRoot.SetMargin(inkMargin(0.0, 120.0, 0.0, 0.0));е
+			leftRoot.SetMargin(inkMargin(0.0, 120.0, 0.0, 0.0));
 		}
 
 		let buttonRight = SimpleButton.Create();

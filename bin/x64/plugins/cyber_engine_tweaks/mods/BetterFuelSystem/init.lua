@@ -22,6 +22,7 @@ local BetterFuelSystem = {
         inVehicle = false,
         blackboardInitialized = false,
         vehicleDetected = false,
+        hudCarActive = false,  -- true ТОЛЬКО когда игрок сам за рулём (hudCarController активен)
     },
 
     Utils = require("modules/Utils"),
@@ -87,6 +88,34 @@ function BetterFuelSystem:new()
 
         Observe("PlayerPuppet", "OnGameAttached", function(this)
             this:RegisterInputListener(this)
+        end)
+
+        -- hudCarController активен ТОЛЬКО когда игрок сам за рулём.
+        -- При поездке в такси (Delamain и др.) этот контроллер не запускается.
+        local function setDrivingState(state)
+            local sc = Game.GetScriptableServiceContainer()
+            if sc then
+                local svc = sc:GetService("BetterFuelSystem.BetterFuelSystemService")
+                if svc then svc:SetIsPlayerDriving(state) end
+            end
+        end
+
+        Observe("hudCarController", "OnInitialize", function()
+            self.runtimeData.hudCarActive = true
+            setDrivingState(true)
+            print("[BFS][init] hudCarController initialized => player is DRIVER")
+        end)
+
+        Observe("hudCarController", "OnUninitialize", function()
+            self.runtimeData.hudCarActive = false
+            setDrivingState(false)
+            print("[BFS][init] hudCarController uninitialized => player lost control")
+        end)
+
+        Observe("hudCarController", "OnUnmountingEvent", function()
+            self.runtimeData.hudCarActive = false
+            setDrivingState(false)
+            print("[BFS][init] hudCarController unmounting => player exiting vehicle")
         end)
 
         Override("BetterFuelSystem.Workbench.BTCallback", "RequestRefuelFromLua;", function()
@@ -187,12 +216,10 @@ function BetterFuelSystem:new()
         if self.runtimeData.inGame then
             local player = Game.GetPlayer()
             local vehicle = Game.GetMountedVehicle(player)
-            
-            local isPlayerDriving = false
-            if vehicle and player then
-                isPlayerDriving = self.Utils.IsPlayerDriving(vehicle, player)
-                print("[BFS][init] onUpdate: vehicle=" .. tostring(vehicle ~= nil) .. ", isPlayerDriving=" .. tostring(isPlayerDriving))
-            end
+
+            -- hudCarActive устанавливается через Observe("hudCarController", ...) — надёжнее blackboard
+            local isPlayerDriving = self.runtimeData.hudCarActive and (vehicle ~= nil)
+            --print("[BFS][init] onUpdate: vehicle=" .. tostring(vehicle ~= nil) .. ", hudCar=" .. tostring(self.runtimeData.hudCarActive) .. ", driving=" .. tostring(isPlayerDriving))
 
             if vehicle and not self.runtimeData.vehicleDetected then
                 print("[BFS][init] Vehicle detected, initializing monitor...")
@@ -207,9 +234,10 @@ function BetterFuelSystem:new()
                 self.VehicleMonitor:save()
                 self.VehicleMonitor:unregisterListeners()
                 self.runtimeData.vehicleDetected = false
+                self.runtimeData.hudCarActive = false
             end
 
-            if self.runtimeData.vehicleDetected then
+            if self.runtimeData.vehicleDetected and isPlayerDriving then
                 self.VehicleMonitor:update(deltaTime)
             end
             
