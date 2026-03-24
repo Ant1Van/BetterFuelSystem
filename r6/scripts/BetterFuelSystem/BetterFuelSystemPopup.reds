@@ -62,18 +62,17 @@ public class BetterFuelSystemPopup extends InGamePopup {
 	    this.m_workbench.SetTranslator(this.m_translator);
 	    this.m_workbench.Reparent(this.m_content);
 
-        // === ПОДКЛЮЧЕНИЕ ЭЛЕМЕНТОВ ИНТЕРФЕЙСА ===
         
-        // 1. Основные кнопки (Regular/Premium)
+        // 1. Buttons (Regular/Premium)
 		this.m_workbench.AddPractice(new ButtonBasics());
 		
-		// 2. Слайдер количества топлива
+		// 2. FuelSlider
 		this.m_workbench.AddPractice(new FuelSlider());
 		
-        // 3. Координаты (Невидимка, чтобы не было вылета)
+        // 3. CursorState
         this.m_workbench.AddPractice(new CursorState());
 
-        // 4. Кнопка "About"
+        // 4. Button "About"
 	    this.m_workbench.AddPractice(new InnerPopup());
     }
 

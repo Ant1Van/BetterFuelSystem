@@ -14,10 +14,8 @@ public class CursorState extends Practice {
 		let root = new inkFlex();
 		root.SetName(this.GetClassName());
 		
-        // === ГЛАВНОЕ: ДЕЛАЕМ НЕВИДИМЫМ ===
         root.SetVisible(false);
         root.SetOpacity(0.0);
-        // =================================
         
         root.SetAnchor(inkEAnchor.Fill);
 
@@ -42,7 +40,6 @@ public class CursorState extends Practice {
 	}
 
 	protected cb func OnInitialize() {
-        // Оставляем логику как была, чтобы не было краша
 		this.m_params = new inkTextParams();
 		this.m_params.AddNumber("X", 0);
 		this.m_params.AddNumber("Y", 0);
@@ -56,7 +53,6 @@ public class CursorState extends Practice {
 	}
 
 	protected cb func OnCursorMove(evt: ref<inkPointerEvent>) {
-        // Пусть считает координаты в фоне, главное что их не видно
 		let position = evt.GetScreenSpacePosition();
 		this.m_params.UpdateNumber("X", RoundF(position.X));
 		this.m_params.UpdateNumber("Y", RoundF(position.Y));

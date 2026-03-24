@@ -18,9 +18,7 @@ module BetterFuelSystem
 
 import Codeware.UI.VirtualResolutionWatcher
 
-// ============================================================================
-// Small polling callback (как VM_HUDTick в Odometr)
-// ============================================================================
+// Small polling callback
 public class BFS_HUDTick extends DelayCallback {
   private let hud: wref<FuelIndicatorManager>;
 
@@ -39,9 +37,7 @@ public class BFS_HUDTick extends DelayCallback {
   }
 }
 
-// ============================================================================
 // HUD widget (Fuel indicator)
-// ============================================================================
 public class FuelIndicatorManager extends IScriptable {
 
   // --- update scheduling ---
@@ -65,15 +61,13 @@ public class FuelIndicatorManager extends IScriptable {
 
   // --- horizontal layout ---
   private let X_FUEL_LABEL: Float = 0.0;
-  private let X_FUEL_VALUE: Float = 70.0;  // Расстояние от "FUEL" до значения (уменьшено для более компактного вида)
+  private let X_FUEL_VALUE: Float = 70.0;
 
   // --- vertical offsets ---
   private let Y_LINE: Float = 0.0;
   private let Y_VALUE_OFFSET: Float = 3.5;
 
-  // --------------------------------------------------------------------------
   // Hard reset (called on world change)
-  // --------------------------------------------------------------------------
   public func OnNewWorld() -> Void {
     this.__built = false;
     this.__tickArmed = false;
@@ -81,18 +75,14 @@ public class FuelIndicatorManager extends IScriptable {
     this.m_text = null;
   }
 
-  // --------------------------------------------------------------------------
   // Check if root widget exists
-  // --------------------------------------------------------------------------
   private func RootExists(vwin: wref<inkCompoundWidget>) -> Bool {
     if !IsDefined(vwin) { return false; }
     let w = vwin.GetWidgetByPathName(n"Root/BFS_FullScreenSlot/BFS_WidgetSlot/BFS_HUDRoot");
     return IsDefined(w);
   }
 
-  // --------------------------------------------------------------------------
   // Find root widget
-  // --------------------------------------------------------------------------
   private func FindRoot() -> ref<inkCanvas> {
     let inkSys: ref<inkSystem> = GameInstance.GetInkSystem();
     if !IsDefined(inkSys) { return null; }
@@ -103,9 +93,7 @@ public class FuelIndicatorManager extends IScriptable {
     return vwin.GetWidgetByPathName(n"Root/BFS_FullScreenSlot/BFS_WidgetSlot/BFS_HUDRoot") as inkCanvas;
   }
 
-  // --------------------------------------------------------------------------
   // Arms the next delayed refresh tick (if not already armed)
-  // --------------------------------------------------------------------------
   public func ArmNextTick() -> Void {
     if this.__tickArmed { return; }
     let ds = GameInstance.GetDelaySystem(GetGameInstance());
@@ -114,9 +102,7 @@ public class FuelIndicatorManager extends IScriptable {
     ds.DelayCallback(this.tick, this.tickPeriod, false);
   }
 
-  // --------------------------------------------------------------------------
   // Apply HUD position (fixed coordinates like Odometr's ApplyHUDPosFromService)
-  // --------------------------------------------------------------------------
   private func ApplyHUDPos() -> Void {
     let inkSys: ref<inkSystem> = GameInstance.GetInkSystem();
     if !IsDefined(inkSys) { return; }
@@ -130,9 +116,7 @@ public class FuelIndicatorManager extends IScriptable {
     }
   }
 
-  // --------------------------------------------------------------------------
   // Ensure UI tree exists and is scaled/positioned
-  // --------------------------------------------------------------------------
   public func Ensure() -> Void {
     let inkSys: ref<inkSystem> = GameInstance.GetInkSystem();
     if !IsDefined(inkSys) { return; }
@@ -197,7 +181,7 @@ public class FuelIndicatorManager extends IScriptable {
       let red: HDRColor; red.Red = 1.0; red.Green = 0.0; red.Blue = 0.0; red.Alpha = 1.0;
       let cyan: HDRColor; cyan.Red = 0.0; cyan.Green = 1.0; cyan.Blue = 1.0; cyan.Alpha = 1.0;
 
-      // Title "FUEL" - создаём напрямую в root, как в Odometr
+      // Title "FUEL" 
       let title: ref<inkText> = root.GetWidgetByPathName(n"BFS_Title") as inkText;
       if !IsDefined(title) {
         title = new inkText();
@@ -216,7 +200,7 @@ public class FuelIndicatorManager extends IScriptable {
       }
       this.m_title = title;
 
-      // Fuel value text - создаём напрямую в root, как в Odometr
+      // Fuel value text
       let text: ref<inkText> = root.GetWidgetByPathName(n"BFS_Text") as inkText;
       if !IsDefined(text) {
         text = new inkText();
@@ -261,14 +245,11 @@ public class FuelIndicatorManager extends IScriptable {
     this.ArmNextTick();
   }
 
-  // --------------------------------------------------------------------------
   // Refresh data (called from tick callback)
-  // --------------------------------------------------------------------------
   public func Refresh() -> Void {
     let root = this.FindRoot();
     if !IsDefined(root) { return; }
 
-    // Проверяем, находится ли игрок в машине
     let gameInstance = GetGameInstance();
     let player = GetPlayer(gameInstance) as PlayerPuppet;
     let inVehicle: Bool = false;
@@ -278,19 +259,15 @@ public class FuelIndicatorManager extends IScriptable {
       inVehicle = IsDefined(vehicle);
     }
 
-    // Если игрок не в машине, скрываем индикатор
     if !inVehicle {
       this.Hide();
       return;
     }
 
-    // Показываем индикатор, даже если сервис недоступен или нет данных
     this.Show();
 
-    // Пытаемся получить данные о топливе, если сервис доступен
     let service = GetBetterFuelSystemServiceInstance();
     if !IsDefined(service) {
-      // Сервис недоступен - показываем значения по умолчанию
       if IsDefined(this.m_text) {
         this.m_text.SetText("0/0L");
       }
@@ -299,14 +276,12 @@ public class FuelIndicatorManager extends IScriptable {
 
     let fuelData = service.GetCurrentVehicleFuelData();
     if !IsDefined(fuelData) {
-      // Данных нет - показываем значения по умолчанию
       if IsDefined(this.m_text) {
         this.m_text.SetText("0/0L");
       }
       return;
     }
 
-    // Обновляем данные о топливе
     let currentFuel = fuelData.currentFuel;
     let maxFuel = fuelData.tankCapacity;
 
@@ -342,9 +317,7 @@ public class FuelIndicatorManager extends IScriptable {
   }
 }
 
-// ============================================================================
-// Lifecycle hooks (как в Odometr)
-// ============================================================================
+// Lifecycle hooks
 @addField(UISystem)
 public let bfsFuelIndicatorManager: ref<FuelIndicatorManager>;
 

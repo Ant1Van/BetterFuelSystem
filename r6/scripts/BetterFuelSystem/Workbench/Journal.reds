@@ -13,7 +13,6 @@ public class Journal extends inkCustomController {
 		let root = new inkFlex();
 		root.SetName(n"journal");
         
-        // === ГЛАВНОЕ: ДЕЛАЕМ НЕВИДИМЫМ ===
 		root.SetVisible(false);
         root.SetOpacity(0.0);
         // =================================
@@ -36,7 +35,6 @@ public class Journal extends inkCustomController {
 	}
 
 	public func AddEntry(text: String) {
-        // Оставляем логику, чтобы Workbench не ругался на отсутствие метода
 		let entry = new inkText();
 		entry.SetFontFamily("base\\gameplay\\gui\\fonts\\raj\\raj.inkfontfamily");
 		entry.SetFontStyle(n"Regular");

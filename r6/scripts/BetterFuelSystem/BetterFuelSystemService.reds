@@ -19,11 +19,11 @@ module BetterFuelSystem
 import BetterFuelSystem.Workbench.*
 import Codeware.UI.*
 
-// Класс для хранения данных о топливе
+
 public class FuelData extends IScriptable {
-    public let fuelType: String;      // Тип топлива
-    public let tankCapacity: Float;   // Объём бака
-    public let currentFuel: Float;    // Текущее количество топлива
+    public let fuelType: String;      // type fuel
+    public let tankCapacity: Float;   // Tank capacity
+    public let currentFuel: Float;    // Current fuel level
     
     public static func Create(fuelType: String, tankCapacity: Float, currentFuel: Float) -> ref<FuelData> {
         let self = new FuelData();
@@ -35,7 +35,7 @@ public class FuelData extends IScriptable {
 }
 
 public class BetterFuelSystemService extends ScriptableService {
-    // Хранилище данных о топливе для каждого транспортного средства
+    // Fuel data storage for each vehicle
     private persistent let vehicleFuelData: ref<inkHashMap>;
     private let currentVehicleID: String;
     
@@ -59,28 +59,28 @@ public class BetterFuelSystemService extends ScriptableService {
         //LogChannel(n"BetterFuelSystem", "Scripts uninitialized");
     }
     
-    // Метод для установки данных о топливе из Lua
+    // Method for setting fuel data from Lua
     public func SetVehicleFuelData(vehicleID: String, fuelType: String, tankCapacity: Float, currentFuel: Float) -> Void {
-        // Используем TDBID.ToNumber() согласно документации redscript hash maps
+        // Use TDBID.ToNumber() according to the redscript hash maps documentation
         // https://wiki.redmodding.org/redscript/references-and-examples/common-patterns/hash-maps
         let hash = TDBID.ToNumber(TDBID.Create(vehicleID));
         
-        // Создаем новый объект с актуальными данными
+        // Create a new object with the current data
         let fuelData = FuelData.Create(fuelType, tankCapacity, currentFuel);
         
-        // Если ключ уже существует, удаляем старые данные
+        // If the key already exists, delete the old data
         if this.vehicleFuelData.KeyExist(hash) {
             this.vehicleFuelData.Remove(hash);
         }
         
-        // Добавляем новые данные
+        // Add the new data
         this.vehicleFuelData.Insert(hash, fuelData);
         this.currentVehicleID = vehicleID;
     }
     
-    // Метод для получения данных о топливе
+    //  Method to get the fuel data
     public func GetVehicleFuelData(vehicleID: String) -> ref<FuelData> {
-        // Используем TDBID.ToNumber() согласно документации redscript hash maps
+        // Use TDBID.ToNumber() according to the redscript hash maps documentation
         let hash = TDBID.ToNumber(TDBID.Create(vehicleID));
         let data = this.vehicleFuelData.Get(hash);
         if IsDefined(data) {
@@ -110,13 +110,13 @@ public class BetterFuelSystemService extends ScriptableService {
         return this.currentVehicleID;
     }
     
-    // Метод для проверки наличия данных о транспортном средстве
+    // Method to check if the vehicle data is available
     public func HasVehicleData(vehicleID: String) -> Bool {
         let hash = TDBID.ToNumber(TDBID.Create(vehicleID));
         return IsDefined(this.vehicleFuelData.Get(hash));
     }
     
-    // Метод для удаления данных о транспортном средстве
+    // Method to delete the vehicle data
     public func RemoveVehicleData(vehicleID: String) -> Void {
         let hash = TDBID.ToNumber(TDBID.Create(vehicleID));
         if IsDefined(this.vehicleFuelData.Get(hash)) {

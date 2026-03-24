@@ -96,15 +96,12 @@ function BetterFuelSystem:new()
             if monitor and money then
                 monitor:syncFuelData()
 
-                -- Проверяем доступное место в баке
                 local availableSpace = monitor:getFuelDeficit()
                 if availableSpace <= 0 then
-                    -- ИСПОЛЬЗУЕМ ЛОКАЛИЗОВАННОЕ СООБЩЕНИЕ
                     money.notifyTankFull()
                     return false
                 end
 
-                -- Получаем количество из Redscript сервиса
                 local fuelAmount = 0.0
                 local serviceContainer = Game.GetScriptableServiceContainer()
                 if serviceContainer then
@@ -114,7 +111,6 @@ function BetterFuelSystem:new()
                     end
                 end
 
-                -- Используем указанное количество или ограничиваем доступным местом
                 local amountToFill = fuelAmount
                 if not amountToFill or amountToFill <= 0 then
                     amountToFill = availableSpace
@@ -144,7 +140,6 @@ function BetterFuelSystem:new()
                 if filled > 0 then
                     money.notifyPurchase(filled, cost, fuelType)
                 else
-                    -- ИСПОЛЬЗУЕМ ЛОКАЛИЗОВАННОЕ СООБЩЕНИЕ
                     money.notifyTankFull()
                 end
             end
@@ -181,7 +176,6 @@ function BetterFuelSystem:new()
     end)
 
     registerForEvent("onUpdate", function (deltaTime) 
-        -- Не обновляем ничего на паузе (deltaTime == 0 или очень маленький)
         if deltaTime <= 0.001 then
             return
         end
@@ -194,15 +188,12 @@ function BetterFuelSystem:new()
             local player = Game.GetPlayer()
             local vehicle = Game.GetMountedVehicle(player)
             
-            -- Проверяем не только наличие транспорта, но и управление им
             local isPlayerDriving = false
             if vehicle and player then
                 isPlayerDriving = self.Utils.IsPlayerDriving(vehicle, player)
                 print("[BFS][init] onUpdate: vehicle=" .. tostring(vehicle ~= nil) .. ", isPlayerDriving=" .. tostring(isPlayerDriving))
             end
 
-            -- Инициализируем монитор если игрок в транспорте
-            -- Проверка управления будет внутри update()
             if vehicle and not self.runtimeData.vehicleDetected then
                 print("[BFS][init] Vehicle detected, initializing monitor...")
                 self.runtimeData.vehicleDetected = true
@@ -218,16 +209,12 @@ function BetterFuelSystem:new()
                 self.runtimeData.vehicleDetected = false
             end
 
-            -- Обновляем монитор если игрок в транспорте
-            -- Проверка управления происходит внутри VehicleMonitor:update()
             if self.runtimeData.vehicleDetected then
                 self.VehicleMonitor:update(deltaTime)
             end
             
-            -- Refresh markers when exiting menu
             local isInMenu = self.GameUI and self.GameUI.IsMenu and self.GameUI.IsMenu() or false
             if self.lastMenuState and not isInMenu then
-                -- Player exited menu - refresh markers
                 if self.GasMarkers and self.GasMarkers.refresh then
                     self.GasMarkers.refresh(true)
                 end

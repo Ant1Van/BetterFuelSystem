@@ -46,10 +46,9 @@ public class ButtonBasics extends Practice {
 		buttonLeft.ToggleAnimations(true);
 		buttonLeft.ToggleSounds(true);
 		buttonLeft.Reparent(bottom);
-		// Устанавливаем margin через root виджет для опускания кнопки
 		let leftRoot = buttonLeft.GetRootWidget();
 		if IsDefined(leftRoot) {
-			leftRoot.SetMargin(inkMargin(0.0, 120.0, 0.0, 0.0)); // Увеличиваем отступ для опускания ниже
+			leftRoot.SetMargin(inkMargin(0.0, 120.0, 0.0, 0.0));е
 		}
 
 		let buttonRight = SimpleButton.Create();
@@ -58,10 +57,9 @@ public class ButtonBasics extends Practice {
 		buttonRight.ToggleAnimations(true);
 		buttonRight.ToggleSounds(true);
 		buttonRight.Reparent(bottom);
-		// Устанавливаем margin через root виджет для опускания кнопки
 		let rightRoot = buttonRight.GetRootWidget();
 		if IsDefined(rightRoot) {
-			rightRoot.SetMargin(inkMargin(0.0, 120.0, 0.0, 0.0)); // Увеличиваем отступ для опускания ниже
+			rightRoot.SetMargin(inkMargin(0.0, 120.0, 0.0, 0.0));
 		}
 
 		let buttonHub = HubLinkButton.Create();
@@ -71,10 +69,9 @@ public class ButtonBasics extends Practice {
 		buttonHub.ToggleAnimations(true);
 		buttonHub.ToggleSounds(true);
 		buttonHub.Reparent(top);
-		// Устанавливаем margin через root виджет
 		let hubRoot = buttonHub.GetRootWidget();
 		if IsDefined(hubRoot) {
-			hubRoot.SetMargin(inkMargin(0.0, 30.0, 0.0, 170.0)); // Добавляем верхний margin для опускания
+			hubRoot.SetMargin(inkMargin(0.0, 30.0, 0.0, 170.0));
 		}
 
 		this.m_top = top;
@@ -187,13 +184,11 @@ public class ButtonBasics extends Practice {
 		if !this.m_fuelSelected {
 			this.m_fuelSelected = true;
 			this.SetHubButtonEnabled(true);
-			// Активируем слайдер и обновляем его диапазон
 			this.ActivateFuelSlider();
 		}
 	}
 	
 	protected func FindFuelSlider() -> wref<FuelSlider> {
-		// Находим виджет FuelSlider по имени класса через контейнер workbench
 		if !IsDefined(this.m_workbench) {
 			return null;
 		}
@@ -201,7 +196,6 @@ public class ButtonBasics extends Practice {
 		if !IsDefined(container) {
 			return null;
 		}
-		// Ищем виджет по имени класса (имя виджета = имя класса)
 		let numChildren = container.GetNumChildren();
 		let i = 0;
 		while i < numChildren {
@@ -225,10 +219,7 @@ public class ButtonBasics extends Practice {
 		if !IsDefined(fuelSlider) {
 			return;
 		}
-		// Сначала активируем слайдер (устанавливаем флаг)
 		fuelSlider.SetEnabled(true);
-		// Затем обновляем диапазон на основе данных о топливе
-		// (это важно, чтобы после UpdateFromFuelData интерактивность была правильно установлена)
 		fuelSlider.UpdateFromFuelData();
 	}
 	

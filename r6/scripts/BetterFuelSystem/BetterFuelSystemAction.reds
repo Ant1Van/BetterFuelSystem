@@ -23,16 +23,16 @@ import Codeware.UI.*
 
 public static func GetGasStations() -> array<Vector4> {
     return [
-        new Vector4(-265.30515, -1884.0623, 8.619392, 1.0), // РАНЧО КОРОНАДО  Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=-265.30515, y=-1884.0623, z=8.619392, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45}) 
-        new Vector4(-150.29979, -1975.7863, 5.8980026, 1.0), // РАНЧО КОРОНАДО 2 Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=-150.29979, y=-1975.7863, z=5.8980026, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
-        new Vector4(743.4587, -1026.5077, 27.927948, 1.0), // РАНЧО КОРОНАДО 3 Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=743.4587, y=-1026.5077, z=27.927948, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
-        new Vector4(342.11194, -931.5839, 24.76944, 1.0), // РАНЧО КОРОНАДО 4 Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=342.11194, y=-931.5839, z=24.76944, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
-        new Vector4(328.76538, -912.7226, 24.76944, 1.0), // РАНЧО КОРОНАДО 5
-        new Vector4(1696.4524, -747.9551, 49.88601, 1.0), // SUNSET Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=1696.4524, y=-747.9551, z=49.88601, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
-        new Vector4(2587.1013, -12.164787, 80.744934, 1.0), // РОКИ-РИДЖ Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=2587.1013, y=-12.164787, z=80.744934, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
-        new Vector4(1490.3348, -1382.0677, 51.24347, 1.0), // СВАЛКА Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=1490.3348, y=-1382.0677, z=51.24347, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
-        new Vector4(-123.270096, -4399.742, 58.965744, 1.0), // ЭЛЕКТРОСТАНЦИЯ Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=-123.270096, y=-4399.742, z=58.965744, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
-        new Vector4(-1691.6865, -4992.5835, 80.20059, 1.0), // АЭРОПОРТ Game.GetTeleportationFacility():Teleport(GetPlayer(), ToVector4{x=-1691.6865, y=-4992.5835, z=80.20059, w=1}, ToEulerAngles{roll=0, pitch=0, yaw=45})
+        new Vector4(-265.30515, -1884.0623, 8.619392, 1.0), 
+        new Vector4(-150.29979, -1975.7863, 5.8980026, 1.0), 
+        new Vector4(743.4587, -1026.5077, 27.927948, 1.0), 
+        new Vector4(342.11194, -931.5839, 24.76944, 1.0), 
+        new Vector4(328.76538, -912.7226, 24.76944, 1.0),
+        new Vector4(1696.4524, -747.9551, 49.88601, 1.0), 
+        new Vector4(2587.1013, -12.164787, 80.744934, 1.0), 
+        new Vector4(1490.3348, -1382.0677, 51.24347, 1.0), 
+        new Vector4(-123.270096, -4399.742, 58.965744, 1.0), 
+        new Vector4(-1691.6865, -4992.5835, 80.20059, 1.0), 
         new Vector4(-1814.9635, -4279.0073, 74.013214, 1.0),
         new Vector4(-593.85486, -711.4331, 8.947876, 1.0),
         new Vector4(-1323.2358, 2233.0151, 15.7690735, 1.0),

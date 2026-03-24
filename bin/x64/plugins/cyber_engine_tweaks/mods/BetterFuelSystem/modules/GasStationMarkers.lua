@@ -1,5 +1,4 @@
--- GasStationMarkers.lua
--- Creates map pins for gas stations from coordinates
+
 
 local M = {
   _cfg = {
@@ -185,7 +184,6 @@ local function _clusterXY(points, radius)
   return out
 end
 
--- ─────────── points + hash ───────────
 local function _loadPoints(path)
   local raw = _readFile(path)
   if not raw or #raw == 0 then 
@@ -214,7 +212,6 @@ local function _hashPoints(pts)
   return h
 end
 
--- ─────────── register/unregister ───────────
 local function _unregisterAll(self)
   local ms = Game.GetMappinSystem()
   if not ms then self._handles = {}; return end
@@ -224,7 +221,6 @@ local function _unregisterAll(self)
   self._handles = {}
 end
 
--- ─────────── spawn pin ───────────
 local function _spawnOne(self, pos, idx)
   local ms = Game.GetMappinSystem()
   if not ms then return nil end
@@ -276,10 +272,6 @@ local function _spawnOne(self, pos, idx)
       end
     end)
     
-    -- _log("INFO", string.format("Spawned pin id=%s at (%.1f, %.1f, %.1f) - active:%s reveal:%s refresh:%s visibility:%s", 
-    --   tostring(id), pos.x, pos.y, pos.z or 0, 
-    --   tostring(activeOk), tostring(revealOk), tostring(refreshOk), tostring(visibilityOk)))
-    
     if self._cfg.trace then _log("TRACE", "spawned id="..tostring(id).." variant=WanderingMerchantVariant") end
     return id
   else
@@ -288,7 +280,6 @@ local function _spawnOne(self, pos, idx)
   return nil
 end
 
--- ─────────── API ───────────
 function M.setup(opts)
   opts = opts or {}
   for k,v in pairs(opts) do M._cfg[k] = v end
@@ -312,7 +303,6 @@ function M.refresh(force)
 
   local ms = Game.GetMappinSystem()
   if not ms then
-    --_log("WARN", "MappinSystem not available yet; will retry later.")
     return
   end
 
@@ -321,7 +311,6 @@ function M.refresh(force)
     if h then table.insert(M._handles, h) end
   end
 
-  -- _log("INFO", string.format("Gas markers: %d points → %d clusters → %d pins", #pts, #clustered, #M._handles))
 end
 
 function M.shutdown()

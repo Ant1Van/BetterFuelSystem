@@ -29,7 +29,6 @@ public class FuelSlider extends Practice {
 		container.SetChildMargin(inkMargin(0.0, 20.0, 0.0, 20.0));
 		container.Reparent(root);
 
-		// Создаем слайдер программно на основе XML структуры		// Локализованный текст над слайдером
 		let labelText = new inkText();
 		labelText.SetName(n"labelText");
 		labelText.SetText(this.GetLocalizedText("BetterFuelSystem-Fuel-Amount"));
@@ -42,14 +41,12 @@ public class FuelSlider extends Practice {
 		labelText.SetFitToContent(true);
 		labelText.Reparent(container);
 		
-		// Основной контейнер слайдера (inkFlexWidget по XML, но используем inkCanvas)
 		let sliderRoot = new inkCanvas();
 		sliderRoot.SetName(n"fuelslider");
 		sliderRoot.SetSize(Vector2(900.0, 80.0));
 		sliderRoot.SetMargin(inkMargin(0.0, 0.0, 0.0, 180.0));
 		sliderRoot.SetInteractive(true);
 		
-		// Фон корневого элемента (bk) - shadow blob для подсветки
 		let rootBk = new inkImage();
 		rootBk.SetName(n"bk");
 		rootBk.SetAnchor(inkEAnchor.Fill);
@@ -57,14 +54,13 @@ public class FuelSlider extends Practice {
 		rootBk.SetHAlign(inkEHorizontalAlign.Left);
 		rootBk.SetVAlign(inkEVerticalAlign.Top);
 		rootBk.SetOpacity(0.02);
-		rootBk.SetTintColor(ThemeColors.ElectricBlue()); // MainColors.Blue
+		rootBk.SetTintColor(ThemeColors.ElectricBlue());
 		rootBk.SetSize(Vector2(900.0, 80.0));
 		rootBk.SetAtlasResource(r"base\\gameplay\\gui\\common\\shadow_blobs.inkatlas");
 		rootBk.SetTexturePart(n"shadowBlobSquare_small");
 		rootBk.SetNineSliceScale(true);
 		rootBk.Reparent(sliderRoot);
 		
-		// Горизонтальная панель layout
 		let layout = new inkHorizontalPanel();
 		layout.SetName(n"layout");
 		layout.SetInteractive(true);
@@ -72,7 +68,6 @@ public class FuelSlider extends Practice {
 		layout.SetVAlign(inkEVerticalAlign.Top);
 		layout.Reparent(sliderRoot);
 		
-		// Контейнер для слайдера (где будет inkSliderController)
 		let sliderContainer = new inkCanvas();
 		sliderContainer.SetName(n"container");
 		sliderContainer.SetHAlign(inkEHorizontalAlign.Right);
@@ -81,7 +76,6 @@ public class FuelSlider extends Practice {
 		sliderContainer.SetInteractive(true);
 		sliderContainer.Reparent(layout);
 		
-		// Фоновое изображение (bkFill)
 		let bkFill = new inkImage();
 		bkFill.SetName(n"bkFill");
 		bkFill.SetFitToContent(true);
@@ -97,7 +91,6 @@ public class FuelSlider extends Practice {
 		bkFill.SetNineSliceScale(true);
 		bkFill.Reparent(sliderContainer);
 		
-		// Рамка (bk)
 		let bkFrame = new inkImage();
 		bkFrame.SetName(n"bk");
 		bkFrame.SetFitToContent(true);
@@ -113,7 +106,6 @@ public class FuelSlider extends Practice {
 		bkFrame.SetNineSliceScale(true);
 		bkFrame.Reparent(sliderContainer);
 		
-		// Sliding area (область слайдера)
 		let slidingArea = new inkCanvas();
 		slidingArea.SetName(n"slidingArea");
 		slidingArea.SetInteractive(true);
@@ -123,7 +115,6 @@ public class FuelSlider extends Practice {
 		slidingArea.SetChildOrder(inkEChildOrder.Backward);
 		slidingArea.Reparent(sliderContainer);
 		
-		// Knob (ручка слайдера)
 		let knob = new inkCanvas();
 		knob.SetName(n"knob");
 		knob.SetAnchor(inkEAnchor.LeftFillVerticaly);
@@ -133,14 +124,13 @@ public class FuelSlider extends Practice {
 		knob.SetChildOrder(inkEChildOrder.Backward);
 		knob.Reparent(slidingArea);
 		
-		// Handle (фон ручки) - добавляется первым в backward order
 		let handle = new inkImage();
 		handle.SetName(n"handle");
 		handle.SetAnchor(inkEAnchor.Fill);
 		handle.SetHAlign(inkEHorizontalAlign.Center);
 		handle.SetVAlign(inkEVerticalAlign.Center);
 		handle.SetOpacity(0.9);
-		// Button.knobBgColor (0.282353, 0.113725, 0.137255)
+
 		let knobBgColor: HDRColor;
 		knobBgColor.Red = 0.282353;
 		knobBgColor.Green = 0.113725;
@@ -153,24 +143,22 @@ public class FuelSlider extends Practice {
 		handle.SetNineSliceScale(true);
 		handle.Reparent(knob);
 		
-		// Текст значения внутри knob
 		let txtValue = new inkText();
 		txtValue.SetName(n"txtValue");
 		txtValue.SetText("50");
 		txtValue.SetFontFamily("base\\gameplay\\gui\\fonts\\raj\\raj.inkfontfamily");
 		txtValue.SetFontSize(42);
 		txtValue.SetFontStyle(n"Medium");
-		txtValue.SetTintColor(ThemeColors.ElectricBlue()); // ElectricBlue цвет текста
+		txtValue.SetTintColor(ThemeColors.ElectricBlue());
 		txtValue.SetAnchor(inkEAnchor.Centered);
 		txtValue.SetAnchorPoint(Vector2(0.5, 0.5));
 		txtValue.SetSize(Vector2(100.0, 32.0));
 		txtValue.SetHorizontalAlignment(textHorizontalAlignment.Center);
 		txtValue.SetVerticalAlignment(textVerticalAlignment.Center);
-		txtValue.SetTracking(2); // tracking="2" из XML
+		txtValue.SetTracking(2);
 		txtValue.Reparent(knob);
 		this.m_valueText = txtValue;
 		
-		// Handle Border (рамка ручки) - добавляется последним в backward order
 		let handleBorder = new inkImage();
 		handleBorder.SetName(n"handleBorder");
 		handleBorder.SetInteractive(true);
@@ -178,14 +166,13 @@ public class FuelSlider extends Practice {
 		handleBorder.SetHAlign(inkEHorizontalAlign.Center);
 		handleBorder.SetVAlign(inkEVerticalAlign.Center);
 		handleBorder.SetOpacity(0.5);
-		handleBorder.SetTintColor(ThemeColors.Bittersweet()); // Button.knobFrameColor
+		handleBorder.SetTintColor(ThemeColors.Bittersweet());
 		handleBorder.SetSize(Vector2(80.0, 32.0));
 		handleBorder.SetAtlasResource(r"base\\gameplay\\gui\\common\\shapes\\atlas_shapes_sync.inkatlas");
 		handleBorder.SetTexturePart(n"cell_fg");
 		handleBorder.SetNineSliceScale(true);
 		handleBorder.Reparent(knob);
 		
-		// Фон для sliding area
 		let background = new inkRectangle();
 		background.SetName(n"background");
 		background.SetAnchor(inkEAnchor.CenterFillHorizontaly);
@@ -195,21 +182,18 @@ public class FuelSlider extends Practice {
 		background.SetSize(Vector2(64.0, 5.0));
 		background.Reparent(slidingArea);
 		
-		// Кнопка влево (btnLeft)
 		let btnLeft = new inkCanvas();
 		btnLeft.SetName(n"btnLeft");
 		btnLeft.SetInteractive(true);
 		btnLeft.SetMargin(inkMargin(-18.0, 0.0, 0.0, 0.0));
 		btnLeft.SetSize(Vector2(175.0, 75.0));
 		
-		// Добавляем inkButtonController для кнопки
 		let btnLeftController = new inkButtonController();
 		btnLeftController.autoUpdateWidgetState = true;
 		btnLeft.AttachController(btnLeftController, true);
 		
 		btnLeft.Reparent(sliderContainer);
 		
-		// Стрелка влево (outline)
 		let arrowLeft = new inkImage();
 		arrowLeft.SetName(n"arrow");
 		arrowLeft.SetFitToContent(true);
@@ -221,10 +205,9 @@ public class FuelSlider extends Practice {
 		arrowLeft.SetSize(Vector2(32.0, 32.0));
 		arrowLeft.SetAtlasResource(r"base\\gameplay\\gui\\common\\shapes\\atlas_shapes_sync.inkatlas");
 		arrowLeft.SetTexturePart(n"arrow_rect_fg");
-		arrowLeft.SetTintColor(ThemeColors.ElectricBlue()); // MainColors.PanelBlue
+		arrowLeft.SetTintColor(ThemeColors.ElectricBlue());
 		arrowLeft.Reparent(btnLeft);
 		
-		// Стрелка влево (filled)
 		let arrowLeftFilled = new inkImage();
 		arrowLeftFilled.SetName(n"arrowFilled");
 		arrowLeftFilled.SetFitToContent(true);
@@ -236,10 +219,9 @@ public class FuelSlider extends Practice {
 		arrowLeftFilled.SetSize(Vector2(32.0, 32.0));
 		arrowLeftFilled.SetAtlasResource(r"base\\gameplay\\gui\\common\\shapes\\atlas_shapes_sync.inkatlas");
 		arrowLeftFilled.SetTexturePart(n"arrow_rect_bg");
-		arrowLeftFilled.SetTintColor(ThemeColors.ElectricBlue()); // MainColors.PanelBlue
+		arrowLeftFilled.SetTintColor(ThemeColors.ElectricBlue());
 		arrowLeftFilled.Reparent(btnLeft);
 		
-		// Кнопка вправо (btnRight)
 		let btnRight = new inkCanvas();
 		btnRight.SetName(n"btnRight");
 		btnRight.SetInteractive(true);
@@ -248,14 +230,12 @@ public class FuelSlider extends Practice {
 		btnRight.SetMargin(inkMargin(0.0, 0.0, -18.0, 0.0));
 		btnRight.SetSize(Vector2(175.0, 75.0));
 		
-		// Добавляем inkButtonController для кнопки
 		let btnRightController = new inkButtonController();
 		btnRightController.autoUpdateWidgetState = true;
 		btnRight.AttachController(btnRightController, true);
 		
 		btnRight.Reparent(sliderContainer);
 		
-		// Стрелка вправо (outline)
 		let arrowRight = new inkImage();
 		arrowRight.SetName(n"arrow");
 		arrowRight.SetFitToContent(true);
@@ -267,10 +247,9 @@ public class FuelSlider extends Practice {
 		arrowRight.SetSize(Vector2(32.0, 32.0));
 		arrowRight.SetAtlasResource(r"base\\gameplay\\gui\\common\\shapes\\atlas_shapes_sync.inkatlas");
 		arrowRight.SetTexturePart(n"arrow_rect_fg");
-		arrowRight.SetTintColor(ThemeColors.ElectricBlue()); // MainColors.PanelBlue
+		arrowRight.SetTintColor(ThemeColors.ElectricBlue());
 		arrowRight.Reparent(btnRight);
 		
-		// Стрелка вправо (filled)
 		let arrowRightFilled = new inkImage();
 		arrowRightFilled.SetName(n"arrowFilled");
 		arrowRightFilled.SetFitToContent(true);
@@ -282,32 +261,25 @@ public class FuelSlider extends Practice {
 		arrowRightFilled.SetSize(Vector2(32.0, 32.0));
 		arrowRightFilled.SetAtlasResource(r"base\\gameplay\\gui\\common\\shapes\\atlas_shapes_sync.inkatlas");
 		arrowRightFilled.SetTexturePart(n"arrow_rect_bg");
-		arrowRightFilled.SetTintColor(ThemeColors.ElectricBlue()); // MainColors.PanelBlue
+		arrowRightFilled.SetTintColor(ThemeColors.ElectricBlue());
 		arrowRightFilled.Reparent(btnRight);
 		
-		// Теперь создаем inkSliderController и привязываем его
-		// Создаем контроллер
 		let sliderController = new inkSliderController();
 		
-		// Устанавливаем ссылки на виджеты (как в XML)
 		sliderController.slidingAreaRef = inkWidgetRef.Create(slidingArea);
 		sliderController.handleRef = inkWidgetRef.Create(knob);
 		sliderController.nextRef = inkWidgetRef.Create(btnRight);
 		sliderController.priorRef = inkWidgetRef.Create(btnLeft);
 		sliderController.direction = inkESliderDirection.Horizontal;
 		
-		// Привязываем контроллер как secondary controller к sliderContainer
 		sliderContainer.AttachController(sliderController, true);
 		
-		// Начальные значения слайдера (будет обновлено при активации)
-		// Устанавливаем минимальный диапазон чтобы слайдер визуально был на месте
 		this.m_minValue = 0.0;
-		this.m_maxValue = 1.0; // Минимальный диапазон для визуального отображения
+		this.m_maxValue = 1.0; 
 		this.m_stepValue = 1.0;
 		this.m_currentValue = 0.0;
 		this.m_isEnabled = false;
 		
-		// Начальная настройка контроллера
 		sliderController.Setup(
 			this.m_minValue,
 			this.m_maxValue,
@@ -315,7 +287,6 @@ public class FuelSlider extends Practice {
 			this.m_stepValue
 		);
 		
-		// Регистрируем callback'и
 		sliderController.RegisterToCallback(
 			n"OnSliderValueChanged",
 			this,
@@ -327,11 +298,9 @@ public class FuelSlider extends Practice {
 			n"OnHandleReleased"
 		);
 		
-		// Сохраняем ссылки
 		this.m_sliderWidget = sliderRoot;
 		this.m_sliderController = sliderController;
 		
-		// Добавляем слайдер в контейнер
 		sliderRoot.Reparent(container);
 
 		this.SetRootWidget(root);
@@ -339,7 +308,6 @@ public class FuelSlider extends Practice {
 
 	protected cb func OnInitialize() {
 		if IsDefined(this.m_sliderWidget) {
-			// Устанавливаем начальное состояние - неактивен
 			this.SetEnabled(false);
 		}
 		this.UpdateValueText();
@@ -392,21 +360,18 @@ public class FuelSlider extends Practice {
 		}
 	}
 	
-	// Метод для активации/деактивации слайдера
 	public func SetEnabled(enabled: Bool) -> Void {
 		this.m_isEnabled = enabled;
 		if IsDefined(this.m_sliderWidget) {
 			this.m_sliderWidget.SetInteractive(enabled);
-			// Визуально показываем неактивность через прозрачность
 			if enabled {
 				this.m_sliderWidget.SetOpacity(1.0);
 			} else {
-				this.m_sliderWidget.SetOpacity(0.5); // Полупрозрачный когда неактивен
+				this.m_sliderWidget.SetOpacity(0.5);
 			}
 		}
 	}
 	
-	// Метод для обновления диапазона на основе данных о топливе
 	public func UpdateFromFuelData() -> Void {
 		let service = GetBetterFuelSystemServiceInstance();
 		if !IsDefined(service) {
@@ -422,21 +387,17 @@ public class FuelSlider extends Practice {
 		let tankCapacity = fuelData.tankCapacity;
 		let availableSpace = tankCapacity - currentFuel;
 		
-		// Проверяем, что есть место для заправки
 		if availableSpace <= 0.0 {
-			// Если места нет, устанавливаем минимальный диапазон
 			this.m_minValue = 0.0;
-			this.m_maxValue = 1.0; // Минимальный диапазон для визуального отображения
+			this.m_maxValue = 1.0;
 			this.m_currentValue = 0.0;
 		} else {
-			// Максимальное значение = свободное место в баке
 			this.m_minValue = 0.0;
 			this.m_maxValue = availableSpace;
 			this.m_stepValue = 1.0;
-			this.m_currentValue = 0.0; // Начинаем с 0
+			this.m_currentValue = 0.0;
 		}
 		
-		// Обновляем контроллер
 		if IsDefined(this.m_sliderController) {
 			this.m_sliderController.Setup(
 				this.m_minValue,
@@ -446,8 +407,6 @@ public class FuelSlider extends Practice {
 			);
 		}
 		
-		// Важно: после Setup() нужно восстановить интерактивность на основе текущего состояния m_isEnabled
-		// Это необходимо, потому что Setup() может сбросить интерактивность виджета
 		if IsDefined(this.m_sliderWidget) {
 			this.m_sliderWidget.SetInteractive(this.m_isEnabled);
 			if this.m_isEnabled {
