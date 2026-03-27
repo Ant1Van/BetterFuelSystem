@@ -42,21 +42,18 @@ protected final func __bfsApplyFuelIcon(opt forMinimap: Bool) -> Void {
   inkWidgetRef.SetScale(this.iconWidget, new Vector2(s, s));
 }
 
-// Minimap pin
 @wrapMethod(MinimapPOIMappinController)
 protected final func UpdateIcon() -> Void {
   wrappedMethod();
   this.__bfsApplyFuelIcon(true);
 }
 
-// World floating pin
 @wrapMethod(QuestMappinController)
 protected func UpdateIcon() -> Void {
   wrappedMethod();
   this.__bfsApplyFuelIcon(false);
 }
 
-// World Map screen
 @wrapMethod(BaseWorldMapMappinController)
 protected func UpdateIcon() -> Void {
   wrappedMethod();

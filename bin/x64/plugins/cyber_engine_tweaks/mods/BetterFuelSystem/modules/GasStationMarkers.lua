@@ -1,5 +1,3 @@
-
-
 local M = {
   _cfg = {
     points_path         = "gas_stations.json",
@@ -14,20 +12,20 @@ local M = {
   _lastHash = 0,
   _wm_patched = false,
 }
-
+ 
 -- ─────────── logging ───────────
 local function _log(level, msg)
   if level ~= "TRACE" then print("[BetterFuelSystem GasMarkers] "..tostring(msg)) end
 end
 local function TRACE(fmt, ...) if M._cfg.trace then _log("TRACE", string.format(fmt, ...)) end end
-
+ 
 -- ─────────── whitelist: show WanderingMerchant under Service Points (and All) ───────────
 local function _ensureWMInServicePoints()
   if M._wm_patched then return end
   M._wm_patched = true
-
+ 
   local variant = TweakDBID.new('Mappins.PointOfInterest_WanderingMerchantVariant')
-
+ 
   local function addIfArray(groupFlat)
     local ok, id = pcall(function() return TweakDBID.new(groupFlat) end)
     if not ok or not id then 
@@ -59,7 +57,7 @@ local function _ensureWMInServicePoints()
       return false
     end
   end
-
+ 
   -- Ensure visibility where players expect it:
   local added = 0
   if addIfArray('WorldMap.ServicePointsFilterGroup.mappins') then added = added + 1 end
@@ -69,7 +67,7 @@ local function _ensureWMInServicePoints()
   
   --_log("INFO", "Added WanderingMerchant variant to " .. tostring(added) .. " filter groups")
 end
-
+ 
 -- ─────────── JSON helpers ───────────
 local function _readFile(p)
   -- Try multiple path variants
@@ -107,7 +105,7 @@ local function _readFile(p)
   --_log("WARN", "All path attempts failed for: " .. tostring(p))
   return nil
 end
-
+ 
 local function _json_decode(str)
   if type(str) ~= "string" then return nil end
   local pos = 1
@@ -151,7 +149,7 @@ local function _json_decode(str)
   end
   return parse()
 end
-
+ 
 -- ─────────── clustering (XY only) ───────────
 local function _clusterXY(points, radius)
   radius = tonumber(radius) or 0
@@ -183,7 +181,7 @@ local function _clusterXY(points, radius)
   end
   return out
 end
-
+ 
 local function _loadPoints(path)
   local raw = _readFile(path)
   if not raw or #raw == 0 then 
@@ -201,7 +199,7 @@ local function _loadPoints(path)
   end
   return out
 end
-
+ 
 local function _hashPoints(pts)
   local h = 0
   for i=1,#pts do
@@ -211,7 +209,7 @@ local function _hashPoints(pts)
   end
   return h
 end
-
+ 
 local function _unregisterAll(self)
   local ms = Game.GetMappinSystem()
   if not ms then self._handles = {}; return end
@@ -220,23 +218,23 @@ local function _unregisterAll(self)
   end
   self._handles = {}
 end
-
+ 
 local function _spawnOne(self, pos, idx)
   local ms = Game.GetMappinSystem()
   if not ms then return nil end
-
+ 
   local md
   pcall(function() md = NewObject('gamemappinsMappinData') end)
   if not md then md = NewObject('MappinData') end
-
+ 
   md.mappinType = TweakDBID.new('Mappins.DefaultStaticMappin')
-  local variant = (gamemappinsMappinVariant and gamemappinsMappinVariant.WanderingMerchantVariant)
-               or (gamedataMappinVariant    and gamedataMappinVariant.WanderingMerchantVariant)
+  local variant = (gamemappinsMappinVariant and gamemappinsMappinVariant.ServicePointDropPointVariant)
+               or (gamedataMappinVariant    and gamedataMappinVariant.ServicePointDropPointVariant)
   if variant then md.variant = variant end
-
+ 
   local title = self._cfg.title
   local desc  = self._cfg.desc
-
+ 
   if type(self._cfg.caption) == "function" then
     local ok, t, d = pcall(self._cfg.caption, pos, idx)
     if ok then
@@ -246,21 +244,21 @@ local function _spawnOne(self, pos, idx)
       _log("WARN", "caption() failed: "..tostring(t))
     end
   end
-
+ 
   md.debugCaption = string.format("BetterFuelSystem|%s|%s",
     tostring(title):gsub("|","/"),
     tostring(desc):gsub("|","/"))
-
+ 
   pcall(function() md.active = true end)
   pcall(function() md.visibleThroughWalls = self._cfg.visibleThroughWalls ~= false end)
   pcall(function() md.clampToGround      = self._cfg.clampToGround       ~= false end)
-
+ 
   local v4 = Vector4.new(pos.x, pos.y, pos.z or 0.0, 1.0)
-
+ 
   local id
   local ok = pcall(function() id = ms:RegisterMappin(md, v4) end)
   if not ok or not id then pcall(function() id = ms:CreateMappin(md, v4, nil) end) end
-
+ 
   if id then
     local activeOk = pcall(function() ms:SetMappinActive(id, true) end)
     local revealOk = pcall(function() ms:RevealMappin(id, true)   end)
@@ -279,7 +277,7 @@ local function _spawnOne(self, pos, idx)
   end
   return nil
 end
-
+ 
 function M.setup(opts)
   opts = opts or {}
   for k,v in pairs(opts) do M._cfg[k] = v end
@@ -287,36 +285,35 @@ function M.setup(opts)
   M:refresh(true)
   TRACE("using points file: %s; clamp=%s", tostring(M._cfg.points_path), tostring(M._cfg.clampToGround ~= false))
 end
-
+ 
 function M.refresh(force)
   local pts = _loadPoints(M._cfg.points_path or "gas_stations.json")
   local clustered = _clusterXY(pts, M._cfg.cluster_radius or 0)
   local newHash = _hashPoints(clustered)
-
+ 
   if not force and newHash == M._lastHash and #M._handles > 0 then
     TRACE("refresh skipped (same hash)")
     return
   end
-
+ 
   _unregisterAll(M)
   M._lastHash = newHash
-
+ 
   local ms = Game.GetMappinSystem()
   if not ms then
     return
   end
-
+ 
   for i=1,#clustered do
     local h = _spawnOne(M, clustered[i], i)
     if h then table.insert(M._handles, h) end
   end
-
+ 
 end
-
+ 
 function M.shutdown()
   _unregisterAll(M)
   TRACE("shutdown done")
 end
-
+ 
 return M
-
